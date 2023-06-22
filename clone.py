@@ -1,13 +1,10 @@
-import os
 from os.path import isdir, join
 
 from assistants import run_command
 
 
-def clone_repository():
-    repo_dir = os.environ.get('REPO_DIR')
-    repo_url = os.environ.get('REPO_URL')
-
+def clone_repository(repo_dir=None, repo_url=None):
+    # Check if the environment variables REPO_DIR and REPO_URL has been setting
     if not repo_dir or not repo_url:
         print('Please set environment variables REPO_DIR and REPO_URL')
         return
