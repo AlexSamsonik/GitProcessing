@@ -2,6 +2,7 @@ from argparse import ArgumentParser
 from os import environ
 
 from clone import clone_repository
+from sprint_branches import create_local_release_branches
 
 if __name__ == '__main__':
     parser = ArgumentParser()
@@ -14,3 +15,4 @@ if __name__ == '__main__':
     repo_dir = environ.get('REPO_DIR')
     repo_url = environ.get('REPO_URL')
     clone_repository(repo_dir, repo_url)
+    create_local_release_branches(sprints, repo_dir)
