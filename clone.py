@@ -1,10 +1,19 @@
+"""This module provides a function for cloning a Git repository."""
+
 import logging
 from os.path import isdir, join
 
 from assistants import run_command
 
 
-def clone_repository(repo_dir=None, repo_url=None):
+def clone_repository(repo_dir: str = None, repo_url: str = None):
+    """
+    Clones a git repository from the specified URL into the specified directory.
+
+    :param repo_dir: The directory to clone the repository into.
+    :param repo_url: The URL of the repository to clone.
+    :return: None
+    """
     # Check if the environment variables REPO_DIR and REPO_URL has been setting
     if not repo_dir or not repo_url:
         logging.info('Please set environment variables REPO_DIR and REPO_URL')
