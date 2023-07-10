@@ -1,9 +1,18 @@
+"""This module provides functions for managing release branches."""
+
 import logging
 
 from assistants import run_command
 
 
-def create_local_release_branches(sprint_numbers, cwd=None):
+def create_local_release_branches(sprint_numbers: list, cwd: str = None):
+    """
+    Creates local release branches for the specified sprints.
+
+    :param sprint_numbers: A list of sprint numbers to create release branches for.
+    :param cwd: The current working directory to run the git commands in.
+    :return: None
+    """
     for sprint in sprint_numbers:
         branch_name = f'release/sprint_{sprint}'
 
