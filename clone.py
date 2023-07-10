@@ -16,4 +16,4 @@ def clone_repository(repo_dir=None, repo_url=None):
         print(f'Repository has not been cloned or the ".git" directory is missing in directory "{repo_dir}"')
         # Clone the repository
         print(f'Start cloning ...')
-        run_command(f'git clone {repo_url}', cwd=repo_dir)
+        run_command(f'git clone {repo_url}')
