@@ -2,7 +2,7 @@
 
 from os.path import isdir, join
 
-from assistants import run_command
+from subprocess import run, PIPE
 
 
 def clone_repository(repo_dir: str = None, repo_url: str = None):
@@ -23,6 +23,8 @@ def clone_repository(repo_dir: str = None, repo_url: str = None):
         print(f'Repository has been cloned and the ".git" directory exists in directory "{repo_dir}"')
     else:
         print(f'Repository has not been cloned or the ".git" directory is missing in directory "{repo_dir}"')
+
         # Clone the repository
         print(f'Start cloning ...')
-        run_command(f'git clone {repo_url}')
+        result = run(['git', 'clone', repo_url], stdout=PIPE)
+        print(result.stdout.decode('utf-8'))

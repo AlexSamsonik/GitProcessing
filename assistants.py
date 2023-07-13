@@ -15,6 +15,4 @@ def run_command(command: str, cwd: str = None) -> tuple:
     output, error = process.communicate()
     if output:
         print(output.strip().decode('utf-8'))
-    if error:
-        print(output.strip().decode('utf-8'))
     return process, output, error
