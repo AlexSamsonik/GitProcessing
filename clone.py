@@ -1,8 +1,7 @@
 """This module provides a function for cloning a Git repository."""
 
 from os.path import isdir, join
-
-from subprocess import run, PIPE
+from subprocess import run
 
 
 def clone_repository(repo_dir: str = None, repo_url: str = None):
@@ -26,5 +25,4 @@ def clone_repository(repo_dir: str = None, repo_url: str = None):
 
         # Clone the repository
         print(f'Start cloning ...')
-        result = run(['git', 'clone', repo_url], stdout=PIPE)
-        print(result.stdout.decode('utf-8'))
+        run(f"git clone {repo_url}".split())

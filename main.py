@@ -1,7 +1,7 @@
 from argparse import ArgumentParser
 from os import environ
 
-from branch import create_local_release_branches, create_local_backport_release_branches
+from branch import create_local_backport_release_branches
 from clone import clone_repository
 
 if __name__ == '__main__':
@@ -17,5 +17,4 @@ if __name__ == '__main__':
 
     print(f'Sprints to be processed: {sprints}')
     clone_repository(repo_dir, repo_url)
-    create_local_release_branches(sprints, repo_dir)
     create_local_backport_release_branches(sprints, args.ticket, repo_dir)
