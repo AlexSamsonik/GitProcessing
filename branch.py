@@ -78,3 +78,24 @@ def collecting_commit_hashes_from_local_branch(local_branch: str, author: str, r
     git_log_cmd = f"git log {local_branch} --format=%H --author={author} --no-merges"
     result = run(git_log_cmd.split(), cwd=repo_dir, stdout=PIPE, text=True)
     return result.stdout.split()
+
+
+def cherry_pick_and_push(sprint_numbers: list, commit_hashes: list, ticket_number: str, repo_dir: str):
+    """
+    Cherry-picks and pushes commits to a backport branch for each sprint number.
+
+    :param sprint_numbers: A list of sprint numbers.
+    :param commit_hashes: A list of commit hashes to cherry-pick.
+    :param ticket_number: The ticket number associated with the backport.
+    :param repo_dir: The path to the repository directory.
+    :return: None
+    """
+    for sprint in sprint_numbers:
+        backport_branch_name = f"{ticket_number}_backport_for_sprint_{sprint}"
+        if local_branch_exist(backport_branch_name, repo_dir):
+            run(f"git switch {backport_branch_name}".split(), cwd=repo_dir)
+            for commit in commit_hashes[::-1]:
+                run(f"git cherry-pick -n {commit}".split(), cwd=repo_dir)
+                run(f"git add --all".split(), cwd=repo_dir)
+            run(f"git commit -m 'backporting_{ticket_number}_for_sprint_{sprint}'".split(), cwd=repo_dir)
+            run(f"git push origin {backport_branch_name}".split(), cwd=repo_dir)
