@@ -20,9 +20,8 @@ def clone_repository(repo_dir: str = None, repo_url: str = None):
     # Check if the repository has been cloned and the .git directory exists
     if isdir(repo_dir) and isdir(join(repo_dir, '.git')):
         print(f'Repository has been cloned and the ".git" directory exists in directory "{repo_dir}"')
+        return
     else:
         print(f'Repository has not been cloned or the ".git" directory is missing in directory "{repo_dir}"')
-
-        # Clone the repository
         print(f'Start cloning ...')
         run(f"git clone {repo_url}".split())
