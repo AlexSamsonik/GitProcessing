@@ -1,7 +1,8 @@
 from argparse import ArgumentParser
 from os import environ
 
-from branch import create_local_backport_release_branches, create_local_branch
+from branch import create_local_backport_release_branches, create_local_branch, \
+    collecting_commit_hashes_from_local_branch
 from clone import clone_repository
 
 if __name__ == '__main__':
@@ -21,3 +22,5 @@ if __name__ == '__main__':
     clone_repository(repo_dir, repo_url)
     create_local_backport_release_branches(sprints, args.ticket, repo_dir)
     create_local_branch(args.branch, args.branch, repo_dir)
+    commit_hashes = collecting_commit_hashes_from_local_branch(args.branch, args.author, repo_dir)
+    print(commit_hashes)

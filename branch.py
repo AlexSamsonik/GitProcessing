@@ -1,6 +1,6 @@
 """This module provides functions for managing sprint release branches."""
 
-from subprocess import run
+from subprocess import run, PIPE
 
 
 def create_local_branch(local_branch: str, remote_branch: str, repo_dir: str):
@@ -12,9 +12,25 @@ def create_local_branch(local_branch: str, remote_branch: str, repo_dir: str):
     :param repo_dir: The path to the repository directory.
     :return: None
     """
-    print(f'Local branch "{local_branch}" is not exists.')
-    print(f'Creating local branch "{local_branch}" ...')
-    run(f'git checkout -b {local_branch} origin/{remote_branch}'.split(), cwd=repo_dir)
+    if local_branch_exist(local_branch, repo_dir):
+        print(f" A branch '{local_branch}' already exists.")
+    else:
+        print(f"Local branch '{local_branch}' is not exists.")
+        print(f"Creating local branch '{local_branch}' ...")
+        run(f"git checkout -b {local_branch} origin/{remote_branch}".split(), cwd=repo_dir)
+
+
+def local_branch_exist(local_branch: str, repo_dir: str):
+    """
+    Checks if a local branch exists in a specified repository directory.
+
+    :param local_branch: The name of the local branch to check.
+    :param repo_dir: The path to the repository directory.
+    :return: The output of the branch list command as a string.
+    """
+    print(f"Check if the local branch '{local_branch}' exists.")
+    branch_list_cmd = f"git branch --list {local_branch}"
+    return run(branch_list_cmd.split(), cwd=repo_dir, capture_output=True, text=True).stdout
 
 
 def pull_from_remote_branch(local_branch: str, remote_branch: str, repo_dir: str):
@@ -26,10 +42,10 @@ def pull_from_remote_branch(local_branch: str, remote_branch: str, repo_dir: str
     :param repo_dir: The path to the repository directory.
     :return: None
     """
-    print(f'Local branch "{local_branch}" already exists.')
-    run(f'git switch {local_branch}'.split(), cwd=repo_dir)
-    print(f'Pulling changes for branch "{remote_branch}" ...')
-    run(f'git pull origin {remote_branch}'.split(), cwd=repo_dir)
+    print(f"Local branch '{local_branch}' already exists.")
+    run(f"git switch {local_branch}".split(), cwd=repo_dir)
+    print(f"Pulling changes for branch '{remote_branch}' ...")
+    run(f"git pull origin {remote_branch}".split(), cwd=repo_dir)
 
 
 def create_local_backport_release_branches(sprint_numbers: list, ticket_number: str, repo_dir: str = None):
@@ -42,13 +58,23 @@ def create_local_backport_release_branches(sprint_numbers: list, ticket_number: 
     :return: None
     """
     for sprint in sprint_numbers:
-        release_branch_name = f'release/sprint_{sprint}'
-        backport_branch_name = f'{ticket_number}_backport_for_sprint_{sprint}'
-
-        print(f"Check if the branch {backport_branch_name} exists.")
-        branch_list_cmd = f"git branch --list {backport_branch_name}"
-        result = run(branch_list_cmd.split(), cwd=repo_dir, capture_output=True, text=True)
-        if result.stdout:
+        release_branch_name = f"release/sprint_{sprint}"
+        backport_branch_name = f"{ticket_number}_backport_for_sprint_{sprint}"
+        if local_branch_exist(backport_branch_name, repo_dir):
             pull_from_remote_branch(backport_branch_name, release_branch_name, repo_dir)
         else:
             create_local_branch(backport_branch_name, release_branch_name, repo_dir)
+
+
+def collecting_commit_hashes_from_local_branch(local_branch: str, author: str, repo_dir: str) -> list:
+    """
+    Collects commit hashes from a local branch authored by a specific author in a specified repository directory.
+
+    :param local_branch: The name of the local branch.
+    :param author: The name of the author whose commits will be collected.
+    :param repo_dir: The path to the repository directory.
+    :return: A list of commit hashes.
+    """
+    git_log_cmd = f"git log {local_branch} --format=%H --author={author} --no-merges"
+    result = run(git_log_cmd.split(), cwd=repo_dir, stdout=PIPE, text=True)
+    return result.stdout.split()
