@@ -75,7 +75,7 @@ def collecting_commit_hashes_from_local_branch(local_branch: str, author: str, r
     :param repo_dir: The path to the repository directory.
     :return: A list of commit hashes.
     """
-    git_log_cmd = f"git log {local_branch} --format=%H --author={author} --no-merges"
+    git_log_cmd = f"git log master..{local_branch} --format=%H --author={author} --no-merges"
     result = run(git_log_cmd.split(), cwd=repo_dir, stdout=PIPE, text=True)
     return result.stdout.split()
 
