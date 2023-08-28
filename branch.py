@@ -64,6 +64,7 @@ def create_local_backport_release_branches(sprint_numbers: list, ticket_number: 
             pull_from_remote_branch(backport_branch_name, release_branch_name, repo_dir)
         else:
             create_local_branch(backport_branch_name, release_branch_name, repo_dir)
+            pull_from_remote_branch(backport_branch_name, release_branch_name, repo_dir)
 
 
 def collecting_commit_hashes_from_local_branch(local_branch: str, author: str, repo_dir: str) -> list:
