@@ -45,7 +45,10 @@ def pull_from_remote_branch(local_branch: str, remote_branch: str, repo_dir: str
     print(f"Local branch '{local_branch}' already exists.")
     run(f"git switch {local_branch}".split(), cwd=repo_dir)
     print(f"Pulling changes for branch '{remote_branch}' ...")
-    run(f"git pull origin {remote_branch}".split(), cwd=repo_dir)
+    if local_branch and remote_branch == "master":
+        run(f"git pull".split(), cwd=repo_dir)
+    else:
+        run(f"git pull origin {remote_branch}".split(), cwd=repo_dir)
 
 
 def create_local_backport_release_branches(sprint_numbers: list, ticket_number: str, repo_dir: str = None):
